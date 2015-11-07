@@ -1,0 +1,17 @@
+#include "graphics.h"
+
+int main(void)
+{
+  //top left corner at (30,30)
+  //horizontal sides of length 90
+  //vertical sides of length 50
+  drawLine(30,30,120,30);
+  drawLine(30,30,30,80);
+  drawline(120,30,120,80);
+  drawLine(30,80,120,80);
+
+  //top left corner at (150,50)
+  //width -> 60
+  //height -> 140
+  drawRect(150,50,60,140);
+}
