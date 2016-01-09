@@ -1,0 +1,11 @@
+X[yz]
+
+(AxX[xz]>-EzX[zz])
+(AxX[xz]>EzX[zz])
+
+(EzX[zz]>AxX[xz])
+
+-(AxX[xz]>-EzX[zz])
+Ez(X[xz]>-(X[zx]^X[yy]))
+X[x]
+((ExX[xx]vAxEyX[xy])^(X[yy]vX[zy]))
