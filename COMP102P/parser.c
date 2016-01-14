@@ -33,8 +33,8 @@ connective fmlas, 4 for existential and 5 for universal formulas.*/
 ////    first = g;
 ////    printf("First is %i\n", first);
 //    printf("First is %c\n", *(first+1));
-/* returns 0 for non-formulas, 1 for atoms, 2 for negations, 3 for binary
-connective fmlas, 4 for existential and 5 for universal formulas.*/
+    /* returns 0 for non-formulas, 1 for atoms, 2 for negations, 3 for binary
+    connective fmlas, 4 for existential and 5 for universal formulas.*/
     switch(*g)
     {
     case 'X':
@@ -55,11 +55,11 @@ connective fmlas, 4 for existential and 5 for universal formulas.*/
     case 'E':
         if (checkVariable(g + 1))
         {
-            if (parse(g+2)== 3 && *(g+2) != '(')
+            if (parse(g + 2) == 3 && *(g + 2) != '(')
             {
                 return 3;
             }
-            else if (parse(g+2) != 0)
+            else if (parse(g + 2) != 0)
             {
                 return 4;
             }
@@ -69,11 +69,11 @@ connective fmlas, 4 for existential and 5 for universal formulas.*/
     case 'A':
         if (checkVariable(g + 1))
         {
-            if (parse(g+2)== 3 && *(g+2) != '(')
+            if (parse(g + 2) == 3 && *(g + 2) != '(')
             {
                 return 3;
             }
-            else if (parse(g+2) != 0)
+            else if (parse(g + 2) != 0)
             {
                 return 5;
             }
@@ -84,21 +84,11 @@ connective fmlas, 4 for existential and 5 for universal formulas.*/
         // if parse(g+1) returns 6, it means it has reached ')'
         // and no errors in parsing have been encountered, so we skip ahead
         // to the value after the closing ')'
-       if (parse(g+1) == 6 )
-       {
-           int offset =1;
-
-           while (*(g+offset))
-           {
-               if (*(g+offset)== ')')
-               {
-                   offset++;
-                    break;
-               }
-               offset++;
-           }
-           return parse(g+offset);
-       }
+//        int a = parse(g+1);
+        if (parse(g + 1) > 5 )
+        {
+            return parse(g + parse(g+1));
+        }
         return parse(g + 1);
 
     case '>':
@@ -128,27 +118,32 @@ connective fmlas, 4 for existential and 5 for universal formulas.*/
     case ')':
         // return address of the closing brackets instead.
         // if returning address each case needs to consider address isntead of 123450
-        if (*(g+1))
+        if (*(g + 1) && parse(g+1) != 0)
         {
-            return 6;
+            int count = 0;
+            while (*g != '(')
+            {
+                count++;
+                g--;
+            }
+            return count;
         }
         break;
     default:
         return 0;
     }
-
 }
 
-bool isLastParen(char *g)
-{
-    g++;
-    while (*g)
-    {
-        if (*g == ')') return false;
-        g++;
-    }
-    return true;
-}
+//bool isLastParen(char *g)
+//{
+//    g++;
+//    while (*g)
+//    {
+//        if (*g == ')') return false;
+//        g++;
+//    }
+//    return true;
+//}
 
 bool checkPredicate(char *g)
 {
@@ -195,38 +190,87 @@ char *partone(char *g)
 Given a formula (A*B) this should return A
  */
 {
-    int numOfCon = 0;
-    int count = 0;
-    int i;
-    char *connective;
-    char *A = malloc(Fsize);
-    char *start;
-//    memcpy(start, g, sizeof(*g));
+    const size_t maxLength = 49;
 
-    while (*g)
+    char *a = malloc(maxLength + 1);
+
+    if (!a)
     {
-        count++;
-        if (checkConnective(g)&& *(g-1) == ')' && *(g+1) == '(')
+        perror("couldn't allocate memory");
+        exit(EXIT_FAILURE);
+    }
+
+    size_t i;
+    size_t counter = 0;
+    int parenCount = 0;
+    size_t start;
+    size_t end;
+    for (i =0; g[i] && i < maxLength; ++i)
+    {
+//        printf("%c\n",g[i]);
+
+        if (g[i - 1] == '(' && g[i] != '(')
         {
-            printf("connective is %c\n", *g);
-            connective = g;
-            numOfCon++;
+            if (parenCount > 1)
+            {
+                start = i - 1;
+            }
+            else
+            {
+                start = i;
+
+            }
+//            parenCount++;
+//            printf("start stored and is %i\n", start);
         }
-        g++;
+        else if (g[i] == '(')
+        {
+            parenCount++;
+//            printf("( found\n");
+        }
+        else if (g[i] == ')')
+        {
+            parenCount--;
+        }
+
+//        printf("g[i] is %c\n", g[i]);
+//        printf("parenCount is %i\n", parenCount);
+
+
+        if (checkConnective(&g[i]) && parenCount == 1 && (g[i - 1] == ')' || g[i + 1] == '('))
+        {
+            end = i - 1;
+
+//            printf("end is %i\n", end);
+//            printf("connective is %c\n", checkConnective(&g[i]));
+            size_t j;
+            for (j = start; g[j] && j < end; ++j)
+            {
+//                printf("something");
+//                printf("%c",g[j]);
+                a[counter] = g[j];
+                ++counter;
+            }
+            break;
+        }
+        else if (checkConnective(&g[i]) && parenCount == 1 && g[i - 1] == ']')
+        {
+            end = i;
+            size_t j;
+            for (j = start; g[j] && j < end; ++j)
+            {
+//                printf("something");
+//                printf("%c",g[j]);
+                a[counter] = g[j];
+                ++counter;
+            }
+            break;
+        }
+
     }
+    a[counter] = '\0';
 
-    for (i = 0; i < count; i++)
-    {
-        printf("*(g+count) is %c\n", *(start+count));
-        *(A+count) = *(start+count);
-    }
-
-    if (numOfCon == 1)
-    {
-
-    }
-
-    return A;
+    return a;
 }
 
 char *parttwo(char *g)
@@ -234,8 +278,40 @@ char *parttwo(char *g)
 Given a formula (A*B) this should return B
  */
 {
+    char *b = malloc(Fsize);
+    int maxLength = Fsize;
+    int parenCount = 0;
+    int i;
+    int bCount = 0;
+    for ( i = 0; i < maxLength; i++ )
+    {
+        if (g[i] == '(')
+        {
+            parenCount++;
+        }
+        else if (g[i] == ')')
+        {
+            parenCount--;
+        }
 
-    return "B";
+        if (parenCount == 1 && checkConnective(&g[i]) && (g[i-1] == ')' || g[i-1] == ']'))
+        {
+            int j = i+1;
+//            for (j = i + 1; j < maxLength; j++)
+//            {
+//
+//            }
+            while (g[j+1])
+            {
+                b[bCount] = g[j];
+                bCount++;
+                j++;
+            }
+        }
+        b[bCount] = '\0';
+    }
+
+    return b;
 }
 
 char bin(char *g)
@@ -243,9 +319,19 @@ char bin(char *g)
 Given a formula (A*B) this should return the character *
  */
 {
+    int parenCount = 0;
     while (*g)
     {
-        if (checkConnective(g) && *(g - 1) == ')' && *(g + 1) == '(')
+        if (*g == '(')
+        {
+            parenCount++;
+        }
+        else if (*g == ')')
+        {
+            parenCount--;
+        }
+
+        if (checkConnective(g) && parenCount == 1 && (*(g - 1) == ')' || *(g - 1) == ']'))
         {
             return *g;
         }
@@ -289,7 +375,8 @@ int main()
     printf("\n");
     if (p == 3)
     {
-        printf("The first part is %s, the binary connective is %c, the second part is %s", partone(name), bin(name), parttwo(name));
+        printf("The first part is %s,\n the binary connective is %c,\n the second part is %s", partone(name), bin(name), parttwo(name));
     }
+    free(name);
     return(1);
 }

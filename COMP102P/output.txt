@@ -1,0 +1,6 @@
+AxEyX[xy] is a universal formula.  The formula AxEyX[xy] is true in G under W
+AxEyX[yx] is a universal formula.  The formula AxEyX[yx] is false in G under W
+ExAyX[yx] is an existential formula.  The formula ExAyX[yx] is true in G under W
+(X[xy]>-X[yx]) is a binary connective formula.  The formula (X[xy]>-X[yx]) is true in G under W
+(X[xy]>-X[yx]) is a binary connective formula.  The formula (X[xy]>-X[yx]) is true in G under W
+(X[xy]>-X[yx]) is a binary connective formula.  The formula (X[xy]>-X[yx]) is false in G under W

@@ -1,0 +1,35 @@
+Input 2
+================
+true
+false
+true
+true
+true
+false
+
+Input 3
+================
+true
+false
+true
+false
+true
+true
+
+Input 4
+================
+true
+false
+true
+false
+true
+true
+
+Input 5
+=================
+true
+false
+true
+true
+true
+false
