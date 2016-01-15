@@ -8,7 +8,6 @@ int no_edges;
 int no_nodes;
 int i;
 const int cases = 6;
-int bound[3];
 
 char *partOne(char *g);
 char *partTwo(char *g);
@@ -31,7 +30,6 @@ int parse(char *g)
             {
                 return 1;
             }
-
         }
         return 0;
 
@@ -80,24 +78,28 @@ int parse(char *g)
             return 3;
         }
         return 0;
+
     case '^':
         if (parse(g + 1) !=  0)
         {
             return 3;
         }
         return 0;
+
     case 'v':
         if (parse(g + 1) !=  0)
         {
             return 3;
         }
         return 0;
+
     case '-':
         if (parse(g + 1) != 0)
         {
             return 2;
         }
         return 0;
+
     case ')':
         // return address of the closing brackets instead.
         // if returning address each case needs to consider address isntead of 123450
@@ -157,8 +159,6 @@ int checkConnective(char *g)
     return 0;
 }
 
-
-
 int eval(char *nm, int edges[no_edges][2], int size, int V[3])
 {
     /* returns 1 if formula nm evaluates to true in graph with 'size' nodes,
@@ -178,14 +178,6 @@ int eval(char *nm, int edges[no_edges][2], int size, int V[3])
         var2 = *(nm + 3);
         isTrue = 0;
 
-//        for(i=0;i<Fsize;i++)
-//        {
-//            printf("%c",nm[i]);
-//        }
-//        printf("\n");
-//        printf("var1 is: %c\n",var1);
-//        printf("var2 is: %c\n",var2);
-//        printf("no edges is %d\n", no_edges);
         for (i = 0; i < no_edges; i++)
         {
             if (var1 == 'x' && V[0] == edges[i][0])
@@ -244,6 +236,7 @@ int eval(char *nm, int edges[no_edges][2], int size, int V[3])
             }
         }
         return isTrue;
+
     case 'A':
         // check characters ahead to determine all quanitfiers.
         // if a single assignment of bound variable returns 0, then whole thing is false.
@@ -263,6 +256,7 @@ int eval(char *nm, int edges[no_edges][2], int size, int V[3])
             }
         }
         return 1;
+
     case 'E':
         // if not a single assignment returns 1, then 0;
         for (i = 0; i < size; i++)
@@ -286,23 +280,18 @@ int eval(char *nm, int edges[no_edges][2], int size, int V[3])
         a = partOne(nm);
         b = partTwo(nm);
         con = bin(nm);
-//        printf("\n( found\n");
-//        printf("%s\ncon is %c\n%s\n", a, con, b);
-//        printf("first char of b is %c\n", *b);
+
         int aEval = eval(a, edges, size, V);
         int bEval = eval(b, edges, size, V);
-//        printf("aEval is %d\nbEval is %d\n", aEval, bEval);
+
         if (con == '>')
         {
-//            printf("> found");
             if (aEval == 1 && bEval == 0)
             {
-//                printf("returning false\n");
                 return 0;
             }
             else
             {
-//                printf("returning true\n");
                 return 1;
             }
         }
@@ -329,22 +318,19 @@ int eval(char *nm, int edges[no_edges][2], int size, int V[3])
             }
         }
     case '-':
-//        printf("- found\n");
         if (eval((nm + 1), edges, size, V) == 1)
         {
-//            printf("negate, return 0\n");
             return 0;
         }
         else if (eval((nm + 1), edges, size, V) == 0)
         {
-//            printf("negate, return 1\n");
             return 1;
         }
     default:
         return 0;
     }
 }
-// start on (
+
 char *partOne(char *g)
 {
     char *a = malloc(Fsize);
@@ -355,7 +341,6 @@ char *partOne(char *g)
     {
         if (g[i] == '(' && i == 0)
         {
-//            parenCount++;
             continue;
         }
         else if (g[i] == '(')
@@ -443,7 +428,6 @@ char bin (char *g)
     int i = 0;
     while (g[i])
     {
-//        printf("%c",g[i]);
         if (g[i] == '(' && i == 0)
         {
             i++;
