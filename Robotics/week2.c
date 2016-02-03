@@ -20,7 +20,7 @@ int main()                                    // Main function
     for (i = 0; i < numOfElem; i++)
     {
         scanf("%i", &numbers[i]);
-    }
++    }
 
     bubbleSort(numbers, numOfElem);
     printf("Sorted array: ");
